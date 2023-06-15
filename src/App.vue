@@ -38,54 +38,72 @@ export default {
   },
 
   methods: {
-    toggleAddTask() {
+    async toggleAddTask() {
       this.showAddTask = !this.showAddTask;
     },
 
-    addTask(task: TasksProps) {
-      this.tasks = [...this.tasks, task];
+    async addTask(task: TasksProps) {
+      const res = await fetch('api/tasks', {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify(task),
+      });
+
+      const data = await res.json();
+      //@ts-ignore
+      this.tasks = [...this.tasks, data];
     },
 
-    deleteTask(id: TasksProps) {
+    async deleteTask(id: TasksProps) {
       if (confirm('Are you sure')) {
-        this.tasks = this.tasks.filter((task) => task.id !== id);
+        const res = await fetch(`api/tasks/${id}]`, {
+          method: 'DELETE',
+        });
+
+        res.status === 200
+          ? //@ts-ignore
+            (this.tasks = this.tasks.filter((task) => task.id !== id))
+          : alert('Error deleting task');
       }
     },
 
-    toggleReminder(id: TasksProps) {
+    async toggleReminder(id: TasksProps) {
+      const taskToToggle = await this.fetchSingleTask(id);
+      const updateTask = { ...taskToToggle, reminder: !taskToToggle.reminder };
+
+      const res = await fetch(`api/tasks/${id}]`, {
+        method: 'PUT',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify(updateTask),
+      });
+
+      const data = await res.json();
+
       //@ts-ignore
       this.tasks = this.tasks.map((task) =>
         //@ts-ignore
-        task.id === id ? { ...task, reminder: !task.reminder } : task,
+        task.id === id ? { ...task, reminder: data.reminder } : task,
       );
     },
-  },
 
-  created() {
-    this.tasks = [
-      //@ts-ignore
-      {
-        id: 1,
-        text: 'Doctors Appointment',
-        day: 'March 1st at 2:30pm',
-        reminder: true,
-      },
-      //@ts-ignore
-      {
-        id: 2,
-        text: 'Meeting at School',
-        day: 'March 3rd at 1:30pm',
-        reminder: true,
-      },
+    async fetchTasks() {
+      const res = await fetch('api/tasks');
+      const data = await res.json();
+      return data;
+    },
 
-      //@ts-ignore
-      {
-        id: 3,
-        text: 'Food Shopping',
-        day: 'March 3rd at 11:00am',
-        reminder: false,
-      },
-    ];
+    async fetchSingleTask(id: TasksProps) {
+      const res = await fetch(`api/tasks/${id}`);
+      const data = await res.json();
+      return data;
+    },
+    async created() {
+      this.tasks = await this.fetchTasks();
+    },
   },
 };
 </script>

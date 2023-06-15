@@ -15,6 +15,7 @@
 export default {
   name: 'SingleTaskComponent',
   props: {
+    //@ts-ignore
     task: Object,
   },
 };
