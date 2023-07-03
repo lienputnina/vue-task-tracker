@@ -11,6 +11,7 @@
 import TasksComponent from '../components/TasksComponent.vue';
 import type { TasksProps } from '../components/TasksComponent.vue';
 import AddTaskComponent from '../components/AddTaskComponent.vue';
+import { TASKS_API } from '../utils/constants';
 
 export default {
   name: 'HomeComponent',
@@ -30,17 +31,17 @@ export default {
 
   methods: {
     async fetchSingleTask(id: TasksProps) {
-      const res = await fetch(`http://localhost:5000/tasks/${id}`);
+      const res = await fetch(`${TASKS_API}/${id}`);
       const data = await res.json();
       return data;
     },
     async fetchTasks() {
-      const res = await fetch('http://localhost:5000/tasks');
+      const res = await fetch(`${TASKS_API}`);
       const data = await res.json();
       return data;
     },
     async addTask(task: TasksProps) {
-      const res = await fetch('http://localhost:5000/tasks', {
+      const res = await fetch(`${TASKS_API}`, {
         method: 'POST',
         headers: {
           'Content-type': 'application/json',
@@ -54,7 +55,7 @@ export default {
 
     async deleteTask(id: TasksProps) {
       if (confirm('Are you sure')) {
-        const res = await fetch(`http://localhost:5000/tasks/${id}`, {
+        const res = await fetch(`${TASKS_API}/${id}`, {
           method: 'DELETE',
         });
 
@@ -69,7 +70,7 @@ export default {
       const taskToToggle = await this.fetchSingleTask(id);
       const updateTask = { ...taskToToggle, reminder: !taskToToggle.reminder };
 
-      const res = await fetch(`http://localhost:5000/tasks/${id}`, {
+      const res = await fetch(`${TASKS_API}/${id}`, {
         method: 'PUT',
         headers: {
           'Content-type': 'application/json',

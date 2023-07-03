@@ -9,20 +9,14 @@
     {
       "text": "Get shit done",
       "day": "June 5th 5:30",
-      "reminder": false,
+      "reminder": true,
       "id": "_vUjzBO"
     },
     {
-      "text": "Chillin",
-      "day": "Today",
-      "reminder": true,
-      "id": "8d0tgFu"
-    },
-    {
       "text": "Stuffy stuff",
-      "day": "June 5th 5:30",
-      "reminder": true,
-      "id": "h4uinu1"
+      "day": "June 15th at 2pm",
+      "reminder": false,
+      "id": "aKamhiG"
     }
   ]
 }
